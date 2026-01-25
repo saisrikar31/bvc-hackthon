@@ -12,3 +12,5 @@ authRouter.post("/auth/login-candidate", loginCandidate);
 // companies
 authRouter.post("/auth/register-company", registerCompany);
 authRouter.post("/auth/login-company", loginCompany);
+
+export default authRouter;
