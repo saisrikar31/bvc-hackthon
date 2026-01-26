@@ -15,6 +15,10 @@ const companySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  domain: {
+    type: String,
+    required: true,
+  },
   website: String,
   jobsPosted: [
     {

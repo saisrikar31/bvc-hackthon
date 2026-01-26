@@ -16,20 +16,22 @@ export const registerCandidate = async (request, response) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const token = jwt.sign({ email: email, role: "candidate" }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         const candidate = new Candidate({
             name: name,
             email: email,
             password: hashedPassword,
-            skills: [skills]
+            skills: skills,
         });
 
+        
         const savedUser = await candidate.save();
 
         if (!savedUser) return response.status(400).json({
             message: "user not saved",
         });
+
+        const token = jwt.sign({ id: savedUser._id, email: email, role: "candidate" }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         return response.status(201).json({
             message: "user saved successfully",
@@ -38,15 +40,15 @@ export const registerCandidate = async (request, response) => {
         });
 
     } catch (err) {
-        response.status(402).json({
+        response.status(500).json({
             message: "server error",
-            error: err
+            error: err,
         });
     }
 }
 
 export const registerCompany = async (request, response) => {
-    const {  companyName, email, password } = request.body;
+    const {  companyName, email, password, domain } = request.body;
     try {
         const existingCompany = await Company.findOne({ email: email });
         if (existingCompany) {
@@ -56,30 +58,32 @@ export const registerCompany = async (request, response) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const token = jwt.sign({ email: email, role: "company" }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
+        
         const company = new Company({
             companyName: companyName,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            domain: domain,
         });
+
+        
 
         const savedCompany = await company.save();
 
         if (!savedCompany) return response.status(400).json({
             message: "company not saved",
         });
-
+        const token = jwt.sign({ id: savedCompany._id, email: email, role: "company" }, process.env.JWT_SECRET, { expiresIn: '7d' });
         return response.status(201).json({
             message: "company saved successfully",
             token: token,
             details: savedCompany,
         });
 
-    } catch (err) {
-        response.status(402).json({
+    } catch (error) {
+        response.status(500).json({
             message: "server error",
-            error: err
+            err: error,
         });
     }
 };
@@ -98,7 +102,7 @@ export const loginCandidate = async (request, response) => {
                 message: "invalid credentials",
             });
         }
-        const token = jwt.sign({ email: email, role: "candidate" }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: existingUser._id, email: email, role: "candidate" }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return response.status(200).json({
             message: "login successful",
             token: token,
@@ -111,7 +115,8 @@ export const loginCandidate = async (request, response) => {
         });
     }
 };
-export const loginCompany = async () => {
+export const loginCompany = async (request, response) => {
+    console.log("Login Company Request Body:", request.body);
     const { email, password } = request.body;
     try {
         const existingCompany = await Company.findOne({ email: email });
@@ -126,16 +131,17 @@ export const loginCompany = async () => {
                 message: "invalid credentials",
             });
         }
-        const token = jwt.sign({ email: email, role: "company" }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: existingCompany._id, email: email, role: "company" }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return response.status(200).json({
             message: "login successful",
             token: token,
             details: existingCompany,
         });
-    } catch (err) {
+    } catch (error) {
+        console.log("JWT Verify Error:", error);
         response.status(500).json({
             message: "server error",
-            error: err
+            error: error
         });
     }
 };

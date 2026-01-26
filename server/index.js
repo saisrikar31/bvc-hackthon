@@ -10,6 +10,7 @@ import connectDB from "./config/db.js";
 // router imports
 import jobRouter from './routes/jobRoutes.js';
 import authRouter from './routes/authRoutes.js';
+import { isAuthenticated, isCompany } from './middlewares/authMiddleware.js';
 
 
 // application configuration
@@ -29,9 +30,16 @@ app.get("/", (request, response) => {
     response.status(200).send("<h1>Server Running</h1>");
 })
 
+app.post("/auth-check", isAuthenticated, isCompany, (request, response) => {
+    response.status(200).json({
+        message: "authentication route working fine",
+    });
+});
+
 // routing setup
 app.use("/api/auth", authRouter);
 app.use("/api/job", jobRouter);
+
 
 // application listening
 app.listen(8000, () => console.log(`server running on ${url}`));

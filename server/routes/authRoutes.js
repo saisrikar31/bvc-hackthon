@@ -6,11 +6,11 @@ import { registerCandidate, registerCompany, loginCandidate, loginCompany } from
 const authRouter = express.Router();
 
 // candidates
-authRouter.post("/auth/register-candidate", registerCandidate);
-authRouter.post("/auth/login-candidate", loginCandidate);
+authRouter.post("/register-candidate", registerCandidate);
+authRouter.post("/login-candidate", loginCandidate);
 
 // companies
-authRouter.post("/auth/register-company", registerCompany);
-authRouter.post("/auth/login-company", loginCompany);
+authRouter.post("/register-company", registerCompany);
+authRouter.post("/login-company", loginCompany);
 
 export default authRouter;
