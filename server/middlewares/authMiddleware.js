@@ -3,6 +3,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 
 export const isAuthenticated = (request, response, next) => {
+    console.log("Authenticating user...");
     const authHeader = request.headers.authorization;
     console.log(authHeader);
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -15,6 +16,7 @@ export const isAuthenticated = (request, response, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         request.user = decoded;
+        console.log("Done");
         next();
     } catch (error) {
         return response.status(401).json({
@@ -26,6 +28,7 @@ export const isAuthenticated = (request, response, next) => {
 
 export const isCompany = (request, response, next) => {
     if (request.user && request.user.role === "company") {
+        console.log("Company access granted");
         next();
     } else {
         return response.status(403).json({
@@ -36,6 +39,7 @@ export const isCompany = (request, response, next) => {
 
 export const isCandidate = (request, response, next) => {
     if (request.user && request.user.role === "candidate") {
+        console.log("Candidate access granted");
         next();
     } else {
         return response.status(403).json({

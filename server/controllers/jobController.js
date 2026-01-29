@@ -1,21 +1,32 @@
 import Job from "../schema/jobSchema.js";
 
 export const createJob = async (request, response) => {
-    const { title, description, skillsRequired, location, salary } = request.body;
+    const reqJob = request.body;
     const company = request.user.id;
-    try {
-        const job = new Job({
-            title: title,
-            description: description,
-            skillsRequired: skillsRequired,
-            location: location,
-            salary: salary,
-            company: company,
-        })
 
-        if (!job) return response.status(500).json({
-            message: "unable to create the job"
-        })
+    console.log(reqJob);
+
+    try {
+
+        console.log("Hello 1")
+
+        // console.log("Request Job Data:", reqJob);
+
+        const job = new Job({
+            ...reqJob,
+            company: request.user.id
+        });
+
+        console.log("Hello 2")
+
+        console.log("New Job Instance:", job);
+
+        if (!job) {
+            console.log("Hello 3")
+            return response.status(500).json({
+                message: "unable to create the job"
+            })
+        }
 
         const savedJob = await job.save();
 
@@ -35,7 +46,7 @@ export const createJob = async (request, response) => {
     }
 }
 
-export const applyJob = async(request, response) => {
+export const applyJob = async (request, response) => {
     const userId = request.user.id;
     const jobId = request.params.jobId;
     try {
@@ -57,7 +68,7 @@ export const applyJob = async(request, response) => {
             error: error,
         });
     }
-}  
+}
 
 export const createdJobsByCompany = async (request, response) => {
     const companyId = request.user.id;
@@ -81,7 +92,7 @@ export const createdJobsByCompany = async (request, response) => {
 }
 
 export const appliedJobsByCandidate = async (request, response) => {
-    const candidateId = request.user.id;
+    const candidateId = request.params.candidateId;
     try {
         const jobs = await Job.find({ applicants: candidateId });
         if (!jobs || jobs.length === 0) {
@@ -101,7 +112,26 @@ export const appliedJobsByCandidate = async (request, response) => {
     }
 }
 
-
+export const deleteJobByCompany = async (request, response) => {
+    const { jobId } = request.params;
+    try {
+        const deletedJob = await Job.findByIdAndDelete(jobId);
+        if (!deletedJob) {
+            return response.status(404).json({
+                message: "Job not found",
+            });
+        }
+        return response.status(200).json({
+            message: "Job deleted successfully",
+            details: deletedJob,
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal server error",
+            error: error,
+        });
+    }
+}
 export const updateJobByCompany = async (request, response) => {
     const { jobId } = request.params;
     const updateData = request.body;
@@ -144,5 +174,20 @@ export const removeJobApplicationByCandidate = async (request, response) => {
             message: "Internal server error",
             error: error,
         });
-    }   
+    }
+}
+
+export const allJobs = async (request, response) => {
+    try {
+        const jobs = await Job.find();
+        return response.status(200).json({
+            message: "All jobs retrieved successfully",
+            details: jobs,
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal server error",
+            error: error,
+        });
+    }
 }

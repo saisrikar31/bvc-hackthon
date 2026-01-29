@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+.input-dark {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  background-color: #0F1720;
+  border: 1px solid #3A4A5A;
+  border-radius: 8px;
+  color: #E6F1F8;
+  outline: none;
+}
+
+.input-dark:focus {
+  border-color: #5B6CFF;
+  box-shadow: 0 0 0 1px #5B6CFF;
+}
