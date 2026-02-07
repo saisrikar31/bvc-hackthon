@@ -25,7 +25,23 @@ const JobDetails = () => {
   }, [id]);
 
 
+
   if (!job) return <p>Loading job details...</p>;
+
+  const applyJob = async () => {
+    try {
+      const token = localStorage.getItem("Token");
+      await axios.post(
+        `http://localhost:8000/api/job/apply-job/${id}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      document.getElementById('my_modal_2').showModal();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-[#0F1720] text-[#E6F1F8] p-6">
@@ -94,16 +110,18 @@ const JobDetails = () => {
 
 
         {/* Open the modal using document.getElementById('ID').showModal() method */}
-        <button className="mt-6 w-full bg-[#5B6CFF] hover:bg-[#4C5AE0] text-white py-3 rounded-lg font-semibold transition" onClick={() => document.getElementById('my_modal_2').showModal()}>Apply Now</button>
-        <dialog id="my_modal_2" className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg"></h3>
-            <p className="py-4">Job applied sucessfully. check in profile section <br/> Press ESC to close</p>
-          </div>
-          <form method="dialog" className="modal-backdrop">
-            <button>close</button>
-          </form>
-        </dialog>
+        <button className="w-full" onClick={applyJob}>
+          <button className="mt-6 w-full bg-[#5B6CFF] hover:bg-[#4C5AE0] text-white py-3 rounded-lg font-semibold transition" onClick={() => document.getElementById('my_modal_2').showModal()}>Apply Now</button>
+          <dialog id="my_modal_2" className="modal">
+            <div className="modal-box">
+              <h3 className="font-bold text-lg"></h3>
+              <p className="py-4">Job applied sucessfully. check in profile section <br /> Press ESC to close</p>
+            </div>
+            <form method="dialog" className="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+        </button>
 
       </div>
     </div>

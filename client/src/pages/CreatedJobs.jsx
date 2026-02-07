@@ -12,7 +12,6 @@ const CreatedJobs = () => {
     const fetchJobs = async () => {
       try {
         const token = localStorage.getItem("Token");
-
         if (!token) {
           throw new Error("No token found. Please login again.");
         }
@@ -56,7 +55,7 @@ const CreatedJobs = () => {
         setJobs(mappedJobs);
       } catch (err) {
         console.error("ERROR:", err);
-        setError(err.message);
+        setError(err.message.message);
       } finally {
         setLoading(false);
       }
@@ -116,12 +115,18 @@ const CreatedJobs = () => {
                   </div>
 
                   <p className="text-sm">
-                     {job.location} •  {job.type}
+                    {job.location} • {job.type}
                   </p>
 
                   <p className="font-semibold"> {job.salary}</p>
 
                   <div className="card-actions justify-end">
+                    <button
+                      className="btn btn-outline btn-sm"
+                      onClick={() => navigate(`/view-job/${job._id}`)}
+                    >
+                      View applications
+                    </button>
                     <button
                       className="btn btn-outline btn-sm"
                       onClick={() => navigate(`/view-job/${job._id}`)}

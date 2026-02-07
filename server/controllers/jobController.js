@@ -58,6 +58,7 @@ export const applyJob = async (request, response) => {
         }
         job.applicants.push(userId);
         await job.save();
+        console.log("Updated Job after application:", job);
         return response.status(200).json({
             message: "Job application successful",
             details: job,
@@ -200,7 +201,7 @@ export const getJobById = async (request, response) => {
             return response.status(404).json({
                 message: "Job not found",
             });
-        }   
+        }
         return response.status(200).json({
             message: "Job retrieved successfully",
             details: job,
@@ -213,3 +214,45 @@ export const getJobById = async (request, response) => {
     }
 }
 
+export const editJob = async (request, response) => {
+    const { jobId } = request.params;
+    const updateData = request.body;
+    try {
+        const updatedJob = await Job.findByIdAndUpdate(jobId, updateData, { new: true });
+        if (!updatedJob) {
+            return response.status(404).json({
+                message: "Job not found",
+            });
+        }
+        return response.status(200).json({
+            message: "Job updated successfully",
+            details: updatedJob,
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal server error",
+            error: error,
+        });
+    }
+}
+
+export const applicantsForJob = async (request, response) => {
+    const { jobId } = request.params;
+    try {
+        const job = await Job.findById(jobId).populate("applicants", "name email");
+        if (!job) {
+            return response.status(404).json({
+                message: "Job not found",
+            });
+        }
+        return response.status(200).json({
+            message: "Applicants retrieved successfully",
+            details: job.applicants,
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal server error",
+            error: error,
+        });
+    }
+}

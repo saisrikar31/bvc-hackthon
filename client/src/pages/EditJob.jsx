@@ -1,19 +1,49 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 const EditJob = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [jobData, setJobData] = useState({
-    title: "Frontend Developer",
-    location: "Remote",
-    type: "Full Time",
-    salary: "₹6 – 8 LPA",
-    experience: "0–2 Years",
-    description:
-      "We are looking for a skilled Frontend Developer with good knowledge of React and Tailwind CSS.",
+    title: "",
+    location: "",
+    type: "",
+    salary: "",
+    experience: "",
+    description: "",
     status: "Open",
   });
+
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      try {
+        const token = localStorage.getItem("Token");
+        const res = await axios.get(
+          `http://localhost:8000/api/job/get-job-by-id/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const job = res.data.details;
+        setJobData({
+          title: job.title || "",
+          location: job.location || "",
+          type: job.employmentType || "",
+          salary: job.salary || "",
+          experience: job.experience || "",
+          description: job.description || "",
+          status: job.status || "Open",
+        });
+      }
+      catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchJobDetails();
+  }, [id]);
 
   const handleChange = (e) => {
     setJobData({
@@ -26,6 +56,22 @@ const EditJob = () => {
     e.preventDefault();
     console.log("Updated Job:", jobData);
     navigate("/company-jobs");
+  };
+
+  const updateJobDetails = async () => {
+    try {
+      const token = localStorage.getItem("Token");
+      await axios.put(
+        `http://localhost:8000/api/job/edit-job/${id}`,
+        jobData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Job updated successfully!");
+      navigate("/created-jobs");
+    } catch (err) {2
+      console.error("Error updating job:", err);
+      alert("Failed to update job. Please try again.");
+    }
   };
 
   return (
@@ -53,7 +99,7 @@ const EditJob = () => {
               onChange={handleChange}
               placeholder="Job Title"
               className="input input-bordered w-full"
-              required
+
             />
 
             <input
@@ -63,7 +109,7 @@ const EditJob = () => {
               onChange={handleChange}
               placeholder="Location"
               className="input input-bordered w-full"
-              required
+
             />
 
             <select
@@ -115,13 +161,13 @@ const EditJob = () => {
             </select>
 
             <div className="card-actions justify-end mt-6">
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" onClick={updateJobDetails}>
                 Save Changes
               </button>
               <button
                 type="button"
                 className="btn btn-outline"
-                onClick={() => navigate("/company-jobs")}
+                onClick={() => navigate("/created-jobs")}
               >
                 Cancel
               </button>

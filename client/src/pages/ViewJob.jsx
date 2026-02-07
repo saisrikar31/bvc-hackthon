@@ -1,18 +1,40 @@
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ViewJob = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const job = {
-    title: "Frontend Developer",
-    location: "Remote",
-    type: "Full Time",
-    salary: "₹6 – 8 LPA",
-    experience: "0–2 Years",
-    description:
-      "We are looking for a skilled Frontend Developer with good knowledge of React and Tailwind CSS.",
-    status: "Open",
-  };
+  const [job, setJob] = useState(null);
+
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      try {
+        const token = localStorage.getItem("Token");
+        const res = await axios.get(
+          `http://localhost:8000/api/job/get-job-by-id/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+
+        );
+        console.log("API RESPONSE:", res);
+        setJob(res.data.details);
+      } catch (error) {
+        console.error("Error fetching job details:", error);
+      }
+    };
+
+    fetchJobDetails();
+  }, [id]);
+
+  if (!job) {
+    return <div className="min-h-screen bg-base-200">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -21,7 +43,7 @@ const ViewJob = () => {
           <div className="max-w-2xl">
             <h1 className="text-4xl font-bold">{job.title}</h1>
             <p className="py-3">
-              📍 {job.location} • 💼 {job.type}
+             {job.location}<br />{job.type}
             </p>
             <span
               className={`badge ${
@@ -30,8 +52,9 @@ const ViewJob = () => {
                   : "badge-error"
               }`}
             >
-              {job.status}
+
             </span>
+
           </div>
         </div>
       </div>
@@ -50,13 +73,13 @@ const ViewJob = () => {
             <div className="card-actions justify-end mt-6">
               <button
                 className="btn btn-warning"
-                onClick={() => navigate("/edit-job/1")}
+                onClick={() => navigate(`/edit-job/${job._id}`)}
               >
                 Edit Job
               </button>
               <button
                 className="btn btn-outline"
-                onClick={() => navigate("/company-jobs")}
+                onClick={() => navigate("/created-jobs")}
               >
                 Back
               </button>
