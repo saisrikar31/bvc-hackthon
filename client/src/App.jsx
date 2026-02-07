@@ -6,6 +6,9 @@ import JobSection from './pages/JobSection.jsx'
 import CreateJob from './pages/CreateJob.jsx'
 import JobDetails from './pages/JobDetails.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
+import CreatedJobs from './pages/CreatedJobs.jsx'
+import EditJob from './pages/EditJob.jsx'
+import ViewJob from './pages/ViewJob.jsx'
 
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 const App = () => {
@@ -21,6 +24,9 @@ const App = () => {
           <Route path='/job-details/:id' element={<JobDetails />} />
           <Route path='/create-job' element={<CreateJob />} />
           <Route path='/profile' element={<ProfilePage />} />
+          <Route path='/created-jobs' element={<CreatedJobs />} />
+          <Route path='/edit-job/:id' element={<EditJob />} />
+          <Route path='/view-job/:id' element={<ViewJob />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -12,7 +12,6 @@ import jobRouter from './routes/jobRoutes.js';
 import authRouter from './routes/authRoutes.js';
 import { isAuthenticated, isCompany } from './middlewares/authMiddleware.js';
 
-
 // application configuration
 const app = express();
 app.use(express.json());
@@ -20,7 +19,7 @@ app.use(cors());
 
 // development/production setup
 const port = process.env.PORT;
-const url = process.env.ENVIRONMENT == 'development' ? `http://localhost:${port}` : process.env.PRODUCTION_URL; 
+const url = process.env.ENVIRONMENT == 'development' ? `http://localhost:${port}` : process.env.PRODUCTION_URL;
 
 // database connection
 connectDB();

@@ -23,7 +23,7 @@ const AuthEmployer = () => {
 
         localStorage.setItem("Token", response.data.token);
         console.log(localStorage.getItem("Token"));
-        navigate('/create-job');
+        navigate('/created-jobs');
 
     }
 

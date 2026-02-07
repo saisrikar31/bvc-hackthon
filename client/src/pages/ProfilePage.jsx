@@ -3,8 +3,8 @@ import React from "react";
 const ProfilePage = () => {
   // Dummy candidate data (replace with API data)
   const candidate = {
-    name: "Nani Kumar",
-    email: "nani@email.com",
+    name: "...",
+    email: "...@email.com",
     skills: ["React", "JavaScript", "Node.js", "MongoDB"],
     resume: "https://example.com/resume.pdf",
     appliedJobs: [
@@ -15,18 +15,18 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#0b1120] text-white p-6">
-      
+
       {/* Page Title */}
       <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
       {/* Profile Card */}
       <div className="card bg-base-200 shadow-xl p-6 mb-8">
         <div className="flex flex-col md:flex-row items-center gap-6">
-          
+
           {/* Avatar */}
           <div className="avatar">
             <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src="https://ui-avatars.com/api/?name=Nani+Kumar&background=1d4ed8&color=fff" alt="Profile" />
+              <img src="" alt="Profile" />
             </div>
           </div>
 

@@ -191,3 +191,25 @@ export const allJobs = async (request, response) => {
         });
     }
 }
+
+export const getJobById = async (request, response) => {
+    const { jobId } = request.params;
+    try {
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return response.status(404).json({
+                message: "Job not found",
+            });
+        }   
+        return response.status(200).json({
+            message: "Job retrieved successfully",
+            details: job,
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal server error",
+            error: error,
+        });
+    }
+}
+
