@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import VK from "./VK.jsx";
 
 const CreatedJobs = () => {
   const navigate = useNavigate();
@@ -123,7 +124,7 @@ const CreatedJobs = () => {
                   <div className="card-actions justify-end">
                     <button
                       className="btn btn-outline btn-sm"
-                      onClick={() => navigate(`/view-job/${job._id}`)}
+                      onClick={() => navigate(`/vk`)}
                     >
                       View applications
                     </button>

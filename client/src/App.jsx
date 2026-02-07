@@ -9,6 +9,7 @@ import ProfilePage from './pages/ProfilePage.jsx'
 import CreatedJobs from './pages/CreatedJobs.jsx'
 import EditJob from './pages/EditJob.jsx'
 import ViewJob from './pages/ViewJob.jsx'
+import VK from './pages/VK.jsx'
 
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
           <Route path='/created-jobs' element={<CreatedJobs />} />
           <Route path='/edit-job/:id' element={<EditJob />} />
           <Route path='/view-job/:id' element={<ViewJob />} />
+          <Route path='/vk/' element={<VK />} />
         </Routes>
       </BrowserRouter>
     </div>
